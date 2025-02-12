@@ -66,6 +66,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        
+      - name: Ensure deploy.sh is executable
+        run: chmod +x ./scripts/app/deploy.sh
 
       - name: Unzip and deploy to Dev
         run: |
@@ -81,7 +84,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+        
+      - name: Ensure deploy.sh is executable
+        run: chmod +x ./scripts/app/deploy.sh
+        
       - name: Unzip and deploy to QA
         run: |
           ./scripts/app/deploy.sh
