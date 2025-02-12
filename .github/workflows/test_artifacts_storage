@@ -1,0 +1,25 @@
+name: CI Workflow
+
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build project
+      run: |
+        mkdir build
+        echo "Building the project..." > build/output.txt
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-output
+        path: build/
