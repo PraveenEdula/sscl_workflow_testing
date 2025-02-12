@@ -20,7 +20,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+        
+      - name: Ensure deploy.sh is executable
+        run: chmod +x ./scripts/app/build.sh
+        
       - name: Build project
         run: |
           ./scripts/app/build.sh
@@ -40,10 +43,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+        
+      - name: Ensure deploy.sh is executable
+        run: chmod +x ./scripts/app/build.sh
+        
       - name: Run tests
         run: ./scripts/app/test.sh
-
+        
       - name: Upload test results
         uses: actions/upload-artifact@v4
         with:
