@@ -45,7 +45,7 @@ jobs:
         uses: actions/checkout@v4
         
       - name: Ensure deploy.sh is executable
-        run: chmod +x ./scripts/app/build.sh
+        run: chmod +x ./scripts/app/test.sh
         
       - name: Run tests
         run: ./scripts/app/test.sh
