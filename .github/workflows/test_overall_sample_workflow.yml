@@ -1,0 +1,97 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    # branches:
+    #   - develop
+    #   - master
+  pull_request:
+    branches:
+      - develop
+      - master
+
+env:
+  AWS_DEFAULT_REGION: us-east-1
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Using the ubuntu-latest runner, no container specified
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build project
+        run: |
+          ./scripts/app/build.sh
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            serverless.yml
+            build/ci-scripts.zip
+            build/libs/*.jar
+
+  test:
+    runs-on: ubuntu-latest  # Using the ubuntu-latest runner, no container specified
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run tests
+        run: ./scripts/app/test.sh
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: build/test-results/*/*.xml
+
+  deploy_dev:
+    runs-on: ubuntu-latest  # Using the ubuntu-latest runner, no container specified
+    needs: build
+    if: github.ref == 'refs/heads/develop'
+    environment:
+      name: dev
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Unzip and deploy to Dev
+        run: |
+          ./scripts/app/deploy.sh
+          
+  deploy_qa:
+    runs-on: ubuntu-latest  # Using the ubuntu-latest runner, no container specified
+    needs: build
+    if: github.ref == 'refs/heads/develop'
+    environment:
+      name: qa
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Unzip and deploy to QA
+        run: |
+          ./scripts/app/deploy.sh
+          
+  deploy_uat:
+    runs-on: ubuntu-latest  # Using the ubuntu-latest runner, no container specified
+    needs: build
+    if: github.ref == 'refs/heads/master'
+    environment:
+      name: uat
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Unzip and deploy to UAT
+        run: |
+          ./scripts/app/deploy.sh
+          
