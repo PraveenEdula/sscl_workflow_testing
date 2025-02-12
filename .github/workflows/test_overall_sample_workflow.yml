@@ -60,8 +60,8 @@ jobs:
     runs-on: ubuntu-latest  # Using the ubuntu-latest runner, no container specified
     needs: [test]
     if: github.ref == 'refs/heads/develop'
-    environment:
-      name: dev
+    env:
+      ENVIRONMENT: dev
     
     steps:
       - name: Checkout code
@@ -78,9 +78,9 @@ jobs:
     runs-on: ubuntu-latest  # Using the ubuntu-latest runner, no container specified
     needs: [deploy_dev]
     if: github.ref == 'refs/heads/develop'
-    environment:
-      name: qa
-    
+    environment: qa1
+    env:
+      ENVIRONMENT: qa
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
